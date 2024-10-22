@@ -6,15 +6,42 @@ import { Person } from 'react-bootstrap-icons'
 function SingleGlobalPost() {
     const { id } = useParams()
     const [post, setPost] = useState({})
+    const [comments, setComments] = useState([])
+    const [usercomment, setUserComment] = useState([])
     const fetchSinglePost = async () => {
-        const response = await fetch(`http://localhost:5000/posts/${id}`)
+        const response = await fetch(`https://demo-flask-app-1kry.onrender.com/posts/${id}`)
         const data = await response.json()
         console.log(data)
         setPost(data)
     }
+    const fetchComments = async () => {
+      const response = await fetch(`https://demo-flask-app-1kry.onrender.com/posts/${id}/comments`)
+      const data = await response.json()
+      console.log(data)
+      setComments(data)
+    }
+    const handleSubmit = async () => {
+      const newComment = {
+        content: usercomment
+      }
+      let token = localStorage.getItem('token');
+      const res = await fetch(`https://demo-flask-app-1kry.onrender.com/posts/${id}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(newComment),
+      })
+      const data = await res.json()
+      console.log(data)
+      fetchComments()
+      setUsercomment('')
+    }
     useEffect(() => {
         fetchSinglePost()
-    }, [id])
+        fetchComments()
+    }, [])
   return (
 <>
     <Navbar/>
@@ -22,34 +49,41 @@ function SingleGlobalPost() {
     <div className='single-global-post'>
         <div className='single-global-post-header'>
         <h1>{post.title}</h1>
-            <img src={post.image} alt="" /> 
             <div className="author">
               <div className="author-icon">
                 <Person />
               </div>
               <div className="author-info">
-                <h1>name</h1>
+                <h1>{post.author}</h1>
                 <p>This is the description of the author</p>
               </div>
             </div>
-            <p className='post-description'>{post.description}</p> 
+            <p className='post-description'>{post.content}</p> 
         </div>
         <div className="comments">
           <h1>Comments</h1>
           <div className="addComment">
             <div className="addComment-icon"> <Person /> </div>
             <div className="addComment-info">
-              <textarea placeholder='Add a comment' />
-              <button>Add Comment</button>
+              <textarea placeholder='Add a comment' value={usercomment}
+              onChange={(e)=>{setUserComment(e.target.value)}} />
+              <button onClick={handleSubmit}>Add Comment</button>
             </div>
           </div>
-          <div className="comment">
-            <div className="comment-icon"> <Person /> </div>
-            <div className="comment-info">
-              <h1>name</h1>
-              <p>This is the comment of the author</p>
-            </div>
-          </div>
+          {comments.map(comment => {
+            return(
+              <div className="comment" key={comment.id}>
+                <div className="comment-icon">
+                  <Person />
+                </div>
+                <div className="comment-info">
+                  <h1>{comment.author}</h1>
+                  <p>{comment.content}</p>
+                </div>
+              </div>
+            )
+          }
+        )}
         </div>
     </div>):(
       <div className='empty'>

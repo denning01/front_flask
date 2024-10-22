@@ -1,27 +1,43 @@
-// PostForm.jsx
 import React, { useState } from 'react';
+import './PostForm.css'; // Import the CSS file
+import Navbar from './Navbar';
 
-const PostForm = ({ onAddPost }) => {
+const PostForm = ({ user, assignUser }) => {
   const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [image, setImage] = useState(null);
+  const [content, setContent] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    if (title && description && image) {
+    if (title && content ) {
       const newPost = {
         title,
-        description,
-        image: URL.createObjectURL(image), // This will create a temporary URL for the image
+        content
       };
-      onAddPost(newPost);
-      setTitle('');
-      setDescription('');
-      setImage(null);
+      let token = localStorage.getItem('token');
+      const res = await fetch('https://demo-flask-app-1kry.onrender.com/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(newPost),
+      });
+      const data = await res.json();
+      if (res.status === 201) {
+        alert('Post created successfully');
+        setTitle('');
+        setContent('');
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+
     }
   };
 
   return (
+    <>
+    <Navbar/>
+    <h2>Add a Post</h2>
     <form onSubmit={handleSubmit}>
       <input
         type="text"
@@ -31,19 +47,14 @@ const PostForm = ({ onAddPost }) => {
         required
       />
       <textarea
-        placeholder="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        required
-      />
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => setImage(e.target.files[0])}
+        placeholder="Content"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
         required
       />
       <button type="submit">Add Post</button>
     </form>
+    </>
   );
 };
 

@@ -6,13 +6,13 @@ function GlobalPostCard({posts}) {
     <div className='global-post-card'>
         <Link to={`/post/${posts.id}`}>
         <div className='global-post-card-header'>
-            <img src={posts.image} alt="" />
+            {/* <img src={posts.image} alt="" /> */}
             <h1>{posts.title.substring(0,30)}...</h1>
-            <p>{posts.description.substring(0,100)}...</p>
+            <p>{posts.content.substring(0,100)}...</p>
             <div className="meta">
                 <div className="author">
                     <Person />
-                    <p>author</p>
+                    <p>{posts.author}</p>
                 </div>
                 <div className="comments">
                     <ChatDots />

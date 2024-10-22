@@ -6,7 +6,7 @@ import Navbar from './Navbar'
 function GlobalPosts() {
     const { posts, setPosts } = usePostsStore()
     const fetchGlobalPosts = async () => {
-        const response = await fetch('http://localhost:5000/posts')
+        const response = await fetch('https://demo-flask-app-1kry.onrender.com/posts')
         const data = await response.json()
         console.log(data)
         setPosts(data)
@@ -18,8 +18,8 @@ function GlobalPosts() {
     <>
         <Navbar />
         <div className='global-posts'>
-        {posts.map((post) => (
-            <GlobalPostCard key={post.id} posts={post} />
+        {posts.map((post, index) => (
+            <GlobalPostCard key={index} posts={post} />
         ))}
     </div>
     </>

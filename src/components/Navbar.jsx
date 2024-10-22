@@ -2,12 +2,18 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { BoxArrowInLeft ,PersonAdd,List} from 'react-bootstrap-icons'
+import { useNavigate } from 'react-router-dom'
 function Navbar() {
   const [showMobileNav,setShowMobileNav] = useState(false)
 
   const handleShowMobileNav = () => {
     setShowMobileNav(!showMobileNav)
   }
+  const navigate = useNavigate()
+  if (localStorage.getItem('token')) {
+
+  }
+  
   return (
     <div className='navbar'>
     <h1 className='logo'>Travel <span>Journal</span></h1>
@@ -16,7 +22,7 @@ function Navbar() {
       <ul>
         <li><Link to={'/home'}>Home</Link></li>
         <li><Link to={'/users'}>Other creators</Link></li>
-        <li><Link to={'/myposts'}>My journals</Link></li>
+        <li><Link to={'/addpost'}>Add Journal</Link></li>
         <li><Link to={'/updateprofile'}>My profile</Link></li>
         <li className='RegisterBtn'><Link to={'/register'} className='btn'>
         Register

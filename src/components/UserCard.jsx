@@ -1,21 +1,22 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Person,ChatDots,PersonAdd } from 'react-bootstrap-icons'
-function UserCard({user}) {
+function UserCard({user,getUsers}) {
   return (
     <div className='user-card'>
         <div className="userIcon">
             <Person />
         </div>
-        <h1>{user.name}</h1>
+        <h1>{user.username}</h1>
+        <p>{user.email}</p>
         <div className="userStats">
           <div className="followers">
             <PersonAdd />
-            <p>{user.followers}</p>
+            <p>{user.followers_count}</p>
           </div>
           <div className="comments">
             <ChatDots />
-            <p>{user.total_comments}</p>
+            <p>{5}</p>
           </div>
         </div>
         <div className="buttons">
